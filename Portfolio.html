@@ -1,0 +1,402 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Shalini Mishra — Dynamic Portfolio</title>
+  <meta name="description" content="A modern, responsive and accessible single-file dynamic portfolio (HTML/CSS/JS) with animations." />
+
+  <style>
+    :root{
+      --bg:#0f1724;
+      --card:#0b1220;
+      --muted:#94a3b8;
+      --accent:#7c3aed; /* purple */
+      --accent-2:#06b6d4; /* teal */
+      --glass: rgba(255,255,255,0.04);
+      --radius:14px;
+      color-scheme: dark;
+      --max-width:1100px;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%;}
+    body{
+      margin:0;
+      background:linear-gradient(180deg,var(--bg) 0%, #071020 100%);
+      color:#e6eef8;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      line-height:1.45;
+    }
+
+    .container{max-width:var(--max-width);margin:0 auto;padding:28px}
+
+    /* header */
+    header{position:sticky;top:12px;z-index:60}
+    .nav{
+      display:flex;align-items:center;justify-content:space-between;gap:16px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      padding:12px;border-radius:12px;backdrop-filter:blur(6px);box-shadow:0 6px 18px rgba(2,6,23,0.6);
+    }
+    .brand{display:flex;align-items:center;gap:10px}
+    .logo{width:40px;height:40px;border-radius:10px;display:inline-grid;place-items:center;background:linear-gradient(135deg,var(--accent),var(--accent-2));font-weight:700}
+    .brand h1{font-size:18px;margin:0}
+    nav ul{display:flex;gap:14px;list-style:none;margin:0;padding:0}
+    nav a{color:var(--muted);text-decoration:none;padding:8px 10px;border-radius:8px;font-weight:600}
+    nav a:hover{color:#fff;background:var(--glass)}
+
+    /* mobile */
+    .hamburger{display:none;background:transparent;border:0;color:var(--muted);font-size:22px}
+    .mobile-menu{display:none}
+
+    /* hero */
+    .hero{display:grid;grid-template-columns:1fr 360px;gap:28px;align-items:center;margin-top:36px}
+    .hero-card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:28px;border-radius:var(--radius);box-shadow:0 10px 30px rgba(2,6,23,0.6)}
+    .hero h2{margin:0;font-size:34px}
+    .accent{background:linear-gradient(90deg,var(--accent),var(--accent-2));-webkit-background-clip:text;background-clip:text;color:transparent}
+    .role{color:var(--muted);margin-top:8px}
+    .cta{display:flex;gap:12px;margin-top:18px}
+    .btn{background:linear-gradient(90deg,var(--accent),var(--accent-2));border:0;padding:10px 14px;border-radius:10px;color:white;font-weight:700;cursor:pointer}
+    .btn-ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);padding:10px 14px;border-radius:10px;color:var(--muted);font-weight:600}
+
+    /* profile card */
+    .profile{padding:18px;text-align:center}
+    .avatar{width:120px;height:120px;border-radius:20px;margin:0 auto;display:block;object-fit:cover;box-shadow:0 10px 30px rgba(2,6,23,0.6)}
+    .socials{display:flex;gap:12px;justify-content:center;margin-top:12px}
+
+    /* sections */
+    section{margin-top:28px}
+    .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+    .card{background:var(--card);padding:18px;border-radius:12px}
+    .projects-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+
+    /* skills */
+    .skill{margin-bottom:10px}
+    .skill .bar{height:10px;background:#07202f;border-radius:999px;overflow:hidden}
+    .skill .fill{height:10px;border-radius:999px;transform:scaleX(0);transform-origin:left}
+
+    /* project tile */
+    .project{display:flex;flex-direction:column;gap:10px}
+    .project img{width:100%;height:150px;object-fit:cover;border-radius:8px}
+    .project h4{margin:0}
+
+    /* contact form */
+    form{display:grid;gap:12px}
+    input,textarea{background:transparent;border:1px solid rgba(255,255,255,0.06);padding:10px;border-radius:8px;color:inherit}
+    textarea{min-height:120px;resize:vertical}
+
+    footer{margin-top:40px;text-align:center;color:var(--muted);font-size:14px}
+
+    /* animations */
+    @keyframes floaty{0%{transform:translateY(0)}50%{transform:translateY(-8px)}100%{transform:translateY(0)}}
+    .float{animation:floaty 4s ease-in-out infinite}
+
+    /* responsiveness */
+    @media (max-width:980px){
+      .hero{grid-template-columns:1fr;}
+      .projects-grid{grid-template-columns:1fr}
+      .grid-3{grid-template-columns:repeat(2,1fr)}
+    }
+    @media (max-width:640px){
+      .nav{padding:10px}
+      nav ul{display:none}
+      .hamburger{display:block}
+      .mobile-menu{display:block;background:var(--card);padding:12px;border-radius:10px;margin-top:10px}
+      .grid-3{grid-template-columns:1fr}
+      .hero{gap:12px}
+    }
+
+    /* accessibility focus */
+    a:focus,button:focus,input:focus,textarea:focus{outline:3px solid rgba(124,58,237,0.18);outline-offset:3px}
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <div class="nav" role="navigation" aria-label="Main">
+        <div class="brand">
+          <div class="logo" aria-hidden>YS</div>
+          <div>
+            <h1 style="font-size:15px;margin:0">Shalini Mishra</h1>
+            <div style="font-size:12px;color:var(--muted)">Developer • Designer • Problem Solver</div>
+          </div>
+        </div>
+
+        <nav aria-label="Primary">
+          <ul>
+            <li><a href="#home">Home</a></li>
+            <li><a href="#projects">Projects</a></li>
+            <li><a href="#skills">Skills</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+        </nav>
+
+        <div style="display:flex;align-items:center;gap:12px">
+          <button class="btn" id="downloadBtn">Download CV</button>
+          <button class="hamburger" id="hambBtn" aria-expanded="false" aria-controls="mobileMenu">☰</button>
+        </div>
+      </div>
+
+      <div id="mobileMenu" class="mobile-menu" style="display:none">
+        <a href="#home" style="display:block;padding:8px 6px;color:var(--muted);text-decoration:none">Home</a>
+        <a href="#projects" style="display:block;padding:8px 6px;color:var(--muted);text-decoration:none">Projects</a>
+        <a href="#skills" style="display:block;padding:8px 6px;color:var(--muted);text-decoration:none">Skills</a>
+        <a href="#contact" style="display:block;padding:8px 6px;color:var(--muted);text-decoration:none">Contact</a>
+      </div>
+    </header>
+
+    <main>
+      <section id="home" class="hero">
+        <div class="hero-card">
+          <h2>Hello, I'm <span class="accent">Shalini Mishra</span></h2>
+          <p class="role">I build responsive web apps, interactive UIs and small backend services. I love turning ideas into polished, production-ready products.</p>
+
+          <div style="margin-top:16px">
+            <div style="font-weight:700">I'm currently:</div>
+            <div id="typewriter" aria-live="polite" style="margin-top:6px;color:var(--muted)">building modern web apps • open to freelance</div>
+          </div>
+
+          <div class="cta">
+            <button class="btn" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Hire me</button>
+            <button class="btn-ghost" onclick="document.getElementById('projects').scrollIntoView({behavior:'smooth'})">See projects</button>
+          </div>
+
+          <div style="margin-top:18px;display:flex;gap:10px;flex-wrap:wrap">
+            <div class="card" style="display:inline-flex;align-items:center;gap:12px">
+              <div style="font-size:20px;background:rgba(255,255,255,0.03);padding:8px;border-radius:8px">🚀</div>
+              <div>
+                <div style="font-weight:700">5+</div>
+                <div style="color:var(--muted);font-size:13px">Projects shipped</div>
+              </div>
+            </div>
+            <div class="card" style="display:inline-flex;align-items:center;gap:12px">
+              <div style="font-size:20px;background:rgba(255,255,255,0.03);padding:8px;border-radius:8px">👥</div>
+              <div>
+                <div style="font-weight:700">Freelance</div>
+                <div style="color:var(--muted);font-size:13px">Available for hire</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <aside class="hero-card profile float">
+          <img class="avatar" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='600' height='600'><rect width='100%' height='100%' fill='%230c1520'/><g fill='%23fff'><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' font-size='72'>Your</text></g></svg>" alt="Your avatar" />
+
+          <h3 style="margin:10px 0 0 0">Shalini Mishra</h3>
+          <div style="color:var(--muted);font-size:13px">Full-stack developer • AI enthusiast</div>
+
+          <div class="socials">
+            <a href="https://github.com/Shalini770" aria-label="GitHub" title="GitHub">GitHub</a>
+            <a href="www.linkedin.com/in/shalinimishra003" aria-label="LinkedIn" title="LinkedIn">LinkedIn</a>
+
+          </div>
+        </aside>
+      </section>
+
+      <section id="projects">
+        <h3 style="margin:0 0 12px 0">Projects</h3>
+        <div class="projects-grid">
+          <div class="card project">
+            <img src="https://picsum.photos/seed/p1/800/400" alt="Project 1 screenshot">
+            <h4>Project One</h4>
+            <div style="color:var(--muted);font-size:13px">A short description of the project, tech used and key features.</div>
+            <div style="margin-top:auto;display:flex;gap:8px;margin-top:8px">
+              <button class="btn-ghost" onclick="openProjectModal(1)">Details</button>
+              <a class="btn" href="#" onclick="event.preventDefault();alert('Open live demo')">Live</a>
+            </div>
+          </div>
+
+          <div class="card project">
+            <img src="https://picsum.photos/seed/p2/800/400" alt="Project 2 screenshot">
+            <h4>Project Two</h4>
+            <div style="color:var(--muted);font-size:13px">Short blurb, backend + frontend notes and lessons learned.</div>
+            <div style="display:flex;gap:8px;margin-top:8px">
+              <button class="btn-ghost" onclick="openProjectModal(2)">Details</button>
+              <a class="btn" href="#" onclick="event.preventDefault();alert('Open live demo')">Live</a>
+            </div>
+          </div>
+
+          <div class="card project">
+            <img src="https://picsum.photos/seed/p3/800/400" alt="Project 3 screenshot">
+            <h4>Project Three</h4>
+            <div style="color:var(--muted);font-size:13px">Mobile-first app; performance improvements and PWA.</div>
+            <div style="display:flex;gap:8px;margin-top:8px">
+              <button class="btn-ghost" onclick="openProjectModal(3)">Details</button>
+              <a class="btn" href="#" onclick="event.preventDefault();alert('Open repo')">Repo</a>
+            </div>
+          </div>
+
+          <div class="card project">
+            <img src="https://picsum.photos/seed/p4/800/400" alt="Project 4 screenshot">
+            <h4>Project Four</h4>
+            <div style="color:var(--muted);font-size:13px">A data viz dashboard with charts and real-time features.</div>
+            <div style="display:flex;gap:8px;margin-top:8px">
+              <button class="btn-ghost" onclick="openProjectModal(4)">Details</button>
+              <a class="btn" href="#" onclick="event.preventDefault();alert('Open demo')">Live</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="skills">
+        <h3 style="margin:0 0 12px 0">Skills</h3>
+        <div class="grid-3">
+          <div class="card">
+            <h4>Front-end</h4>
+            <div style="color:var(--muted);font-size:13px">HTML • CSS • JavaScript • React</div>
+            <div style="margin-top:12px">
+              <div class="skill"><div style="display:flex;justify-content:space-between;font-size:13px"><span>JavaScript</span><span>90%</span></div><div class="bar"><div class="fill" data-fill="0.9"></div></div></div>
+              <div class="skill"><div style="display:flex;justify-content:space-between;font-size:13px"><span>React</span><span>85%</span></div><div class="bar"><div class="fill" data-fill="0.85"></div></div></div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h4>Back-end</h4>
+            <div style="color:var(--muted);font-size:13px">Node • Python • Flask • Databases</div>
+            <div style="margin-top:12px">
+              <div class="skill"><div style="display:flex;justify-content:space-between;font-size:13px"><span>Node.js</span><span>80%</span></div><div class="bar"><div class="fill" data-fill="0.8"></div></div></div>
+              <div class="skill"><div style="display:flex;justify-content:space-between;font-size:13px"><span>Databases</span><span>75%</span></div><div class="bar"><div class="fill" data-fill="0.75"></div></div></div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h4>Other</h4>
+            <div style="color:var(--muted);font-size:13px">DevOps • Testing • Accessibility</div>
+            <div style="margin-top:12px">
+              <div class="skill"><div style="display:flex;justify-content:space-between;font-size:13px"><span>CI / CD</span><span>70%</span></div><div class="bar"><div class="fill" data-fill="0.7"></div></div></div>
+              <div class="skill"><div style="display:flex;justify-content:space-between;font-size:13px"><span>Testing</span><span>65%</span></div><div class="bar"><div class="fill" data-fill="0.65"></div></div></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="contact">
+        <h3 style="margin:0 0 12px 0">Contact</h3>
+        <div class="card">
+          <form id="contactForm" novalidate>
+            <label for="name">Name</label>
+            <input id="name" name="name" required placeholder="Your name">
+
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" required placeholder="you@domain.com">
+
+            <label for="message">Message</label>
+            <textarea id="message" name="message" required placeholder="Tell me about your project..."></textarea>
+
+            <div style="display:flex;gap:10px;align-items:center">
+              <button class="btn" type="submit">Send message</button>
+              <div id="formMsg" style="color:var(--muted);font-size:13px"></div>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <footer>
+        <div>Made with ♥ • Shalini Mishra • {2025}</div>
+      </footer>
+    </main>
+  </div>
+
+  <!-- Modal (simple) -->
+  <div id="projectModal" role="dialog" aria-modal="true" aria-hidden="true" style="position:fixed;inset:0;display:none;align-items:center;justify-content:center;padding:20px;z-index:80">
+    <div style="max-width:900px;width:100%;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:20px;border-radius:12px;box-shadow:0 30px 80px rgba(2,6,23,0.8);">
+      <button onclick="closeModal()" style="float:right;background:transparent;border:0;color:var(--muted);font-weight:700">✕</button>
+      <h3 id="modalTitle">Project</h3>
+      <p id="modalBody" style="color:var(--muted)"></p>
+    </div>
+  </div>
+
+  <script>
+    // Mobile menu
+    const hambBtn = document.getElementById('hambBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    hambBtn.addEventListener('click', ()=>{
+      const open = mobileMenu.style.display === 'block';
+      mobileMenu.style.display = open ? 'none' : 'block';
+      hambBtn.setAttribute('aria-expanded', String(!open));
+    });
+
+    // Typewriter (simple)
+    const typeEl = document.getElementById('typewriter');
+    const phrases = ['building modern web apps', 'open to freelance', 'teaching & mentoring', 'exploring AI + web'];
+    let pi=0, ti=0;
+    function typeLoop(){
+      const txt = phrases[pi];
+      if(ti <= txt.length){
+        typeEl.textContent = txt.slice(0,ti);
+        ti++;
+        setTimeout(typeLoop, 40 + Math.random()*50);
+      } else {
+        setTimeout(()=>{ // pause then delete
+          const del = setInterval(()=>{
+            if(ti>0){ ti--; typeEl.textContent = txt.slice(0,ti); } else { clearInterval(del); pi=(pi+1)%phrases.length; setTimeout(typeLoop,300);} }, 30);
+        },1000);
+      }
+    }
+    typeLoop();
+
+    // Skills animation
+    window.addEventListener('load', ()=>{
+      const fills = document.querySelectorAll('.fill');
+      fills.forEach((el,i)=>{
+        const pct = Number(el.dataset.fill) || 0;
+        el.style.background = 'linear-gradient(90deg,var(--accent),var(--accent-2))';
+        el.style.width = '100%';
+        el.style.transform = 'scaleX(0)';
+        el.style.transition = 'transform 900ms cubic-bezier(.2,.8,.2,1) '+(i*120)+'ms';
+        requestAnimationFrame(()=>{ el.style.transform = 'scaleX('+pct+')'; });
+      });
+    });
+
+    // Project modal content
+    const modal = document.getElementById('projectModal');
+    function openProjectModal(id){
+      const title = document.getElementById('modalTitle');
+      const body = document.getElementById('modalBody');
+      title.textContent = 'Project ' + id;
+      body.textContent = 'Detailed description of project '+id+" — add tech stack, your role, challenges and link to the repo or live demo here.";
+      modal.style.display = 'flex';
+      modal.setAttribute('aria-hidden','false');
+    }
+    function closeModal(){ modal.style.display='none'; modal.setAttribute('aria-hidden','true'); }
+
+    // Simple contact form handler (mock)
+    const form = document.getElementById('contactForm');
+    const formMsg = document.getElementById('formMsg');
+    form.addEventListener('submit', (e)=>{
+      e.preventDefault();
+      const data = new FormData(form);
+      const name = data.get('name');
+      // very basic validation
+      if(!name || !data.get('email') || !data.get('message')){
+        formMsg.textContent = 'Please fill all fields.'; return;
+      }
+      formMsg.textContent = 'Sending...';
+      // simulate network
+      setTimeout(()=>{ formMsg.textContent = 'Thanks — message received! I\'ll reply shortly.'; form.reset(); }, 900);
+    });
+
+    // Download CV (mock) — create a simple text file
+    document.getElementById('downloadBtn').addEventListener('click', ()=>{
+      const blob = new Blob(["Your Name\nFull‑stack developer\nEmail: you@domain.com\n\nSummary:\nExperienced developer..."], {type:'text/plain'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href=url; a.download='YourName-CV.txt'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+    });
+
+    // Smooth scroll polyfill for older browsers (tiny)
+    (function(){
+      if('scrollBehavior' in document.documentElement.style) return;
+      const anchors = document.querySelectorAll('a[href^="#"]');
+      anchors.forEach(a=>a.addEventListener('click', function(e){
+        const t = document.querySelector(this.getAttribute('href'));
+        if(t){ e.preventDefault(); const top = t.getBoundingClientRect().top + window.scrollY - 20; window.scrollTo({top,behavior:'smooth'}); }
+      }));
+    })();
+
+    // keyboard: close modal with esc
+    window.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeModal(); });
+  </script>
+</body>
+</html>
